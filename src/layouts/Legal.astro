@@ -1,0 +1,79 @@
+---
+/** A plain reading page for the legal texts, in the same poster card. */
+import Base from './Base.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Arrow from '../components/Arrow.astro';
+import { site } from '../content/site';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<Base title={`${title} – ${site.name.full}`} description={`${title} der Website von ${site.name.full}.`} noindex>
+  <main id="inhalt">
+    <article class="legal card">
+      <span class="ticks" aria-hidden="true"></span>
+      <p class="legal__back"><a class="link" href="/"><Arrow class="legal__arrow" /> Zur Startseite</a></p>
+      <h1 class="head">{title}<span class="dot">.</span></h1>
+      <div class="legal__body"><slot /></div>
+      <p class="label muted">Stand: {site.legal.updated}</p>
+    </article>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .legal {
+    padding-block: clamp(28px, 4vw, 56px) clamp(48px, 6vw, 96px);
+  }
+
+  .legal__back {
+    margin-bottom: clamp(40px, 6vw, 88px);
+    font-weight: 500;
+  }
+
+  .legal__back a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .legal :global(.legal__arrow) {
+    width: 1em;
+    height: 1em;
+    transform: scaleX(-1);
+  }
+
+  .legal__body {
+    max-width: 68ch;
+    margin-block: clamp(32px, 4vw, 64px);
+  }
+
+  .legal__body :global(h2) {
+    margin: 2.2em 0 0.5em;
+    font-size: var(--step-lead);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .legal__body :global(p),
+  .legal__body :global(ul) {
+    margin-bottom: 1em;
+  }
+
+  .legal__body :global(ul) {
+    padding-left: 1.2em;
+    list-style: disc;
+  }
+
+  .legal__body :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .legal__body :global(address) {
+    font-style: normal;
+  }
+</style>

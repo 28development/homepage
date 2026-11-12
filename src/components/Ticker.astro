@@ -1,0 +1,58 @@
+---
+/** A running line of the technologies, between the poster and the work. Decorative: the same list is readable under "Erfahrung". */
+import { site, plain } from '../content/site';
+const items = site.experience.skills
+  .filter((group) => group.label !== 'Arbeitsweise')
+  .flatMap((group) => group.items.map(plain));
+---
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    {[0, 1].map(() => (
+      <ul>
+        {items.map((item) => <li>{item}<span class="dot">●</span></li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ticker {
+    overflow: clip;
+    padding-block: clamp(28px, 4vw, 56px) 0;
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .ticker ul {
+    display: flex;
+    flex: none;
+    font-size: clamp(2rem, 1.2rem + 3.6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .ticker li {
+    display: flex;
+    align-items: center;
+  }
+
+  .ticker .dot {
+    margin-inline: 0.5em;
+    font-size: 0.32em;
+  }
+
+  :global(html[data-motion='full']) .ticker__track {
+    animation: ticker 46s linear infinite;
+  }
+
+  @keyframes ticker {
+    to {
+      translate: -50% 0;
+    }
+  }
+</style>

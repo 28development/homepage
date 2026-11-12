@@ -1,0 +1,45 @@
+---
+/**
+ * The stream. Place it inside an element with `data-flow-root`; it fills
+ * that element and flows around its `data-flow-glyphs` and `data-flow-block`
+ * children. Purely decorative, so hidden from assistive technology.
+ */
+interface Props {
+  /** Which token inks the lines: the page ink, or the ink of an inverted field. */
+  tone?: 'ink' | 'field';
+  strength?: number;
+  density?: number;
+  alpha?: number;
+  /** First wave pours in from the top. */
+  pour?: boolean;
+  /** Wait for the page's entrance, then this many milliseconds. */
+  wait?: number;
+  /** Speed up while the root is hovered. */
+  hover?: boolean;
+  pointer?: boolean;
+}
+const { tone = 'ink', strength = 0.4, density = 1, alpha = 0.9, pour, wait, hover, pointer = true } = Astro.props;
+---
+<canvas
+  class="flow"
+  data-flow
+  data-flow-var={tone === 'field' ? '--field-ink' : '--ink'}
+  data-flow-strength={strength}
+  data-flow-density={density}
+  data-flow-alpha={alpha}
+  data-flow-pour={pour ? '' : undefined}
+  data-flow-wait={wait !== undefined ? String(wait) : undefined}
+  data-flow-hover={hover ? '' : undefined}
+  data-flow-pointer={pointer ? undefined : 'off'}
+  aria-hidden="true"></canvas>
+
+<style>
+  .flow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    pointer-events: none;
+  }
+</style>

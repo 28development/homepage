@@ -1,0 +1,114 @@
+---
+import { site, isTodo } from '../content/site';
+import T from './T.astro';
+import Arrow from './Arrow.astro';
+import { avatar } from '../content/portrait';
+const { contact, links } = site;
+const mail = isTodo(links.email) ? null : `mailto:${links.email}?subject=${encodeURIComponent('Hallo Umut')}`;
+const primary = mail ?? links.linkedin;
+---
+<section class="contact card" id="kontakt" aria-labelledby="contact-title">
+  <span class="ticks" aria-hidden="true"></span>
+  {avatar && <img class="contact__avatar" src={avatar.src} alt="" width="112" height="112" loading="lazy" decoding="async" data-reveal />}
+  <h2 class="contact__title display" id="contact-title" data-reveal="mask"><span>{contact.heading}<span class="dot">.</span></span></h2>
+  <p class="lead contact__invite" data-reveal style="--i:2">{contact.invitation}</p>
+  <p data-reveal style="--i:3">
+    <a class="button contact__button" href={primary} rel="noopener me">
+      {mail ? 'E-Mail schreiben' : 'Auf LinkedIn schreiben'}<Arrow direction={mail ? 'right' : 'up-right'} />
+    </a>
+  </p>
+
+  <ul class="contact__rows">
+    <li data-reveal>
+      <span class="label muted">LinkedIn</span>
+      <a class="link" href={links.linkedin} rel="noopener me">Umut Tufanoglu</a>
+    </li>
+    <li data-reveal style="--i:1">
+      <span class="label muted">E-Mail</span>
+      {mail ? <a class="link" href={mail}>{links.email as string}</a> : <span><T value={links.email} /></span>}
+    </li>
+    <li data-reveal style="--i:2">
+      <span class="label muted">GitHub</span>
+      {isTodo(links.github) ? <span><T value={links.github} /></span> : <a class="link" href={links.github} rel="noopener me">28development</a>}
+    </li>
+    <li data-reveal style="--i:3">
+      <span class="label muted">Standort</span>
+      <span>{site.location}</span>
+    </li>
+  </ul>
+</section>
+
+<style>
+  .contact {
+    display: grid;
+    justify-items: center;
+    padding-block: clamp(72px, 10vw, 152px) var(--pad);
+    text-align: center;
+  }
+
+  .contact__avatar {
+    width: clamp(80px, 8vw, 112px);
+    height: auto;
+    aspect-ratio: 1;
+    margin-bottom: clamp(18px, 2vw, 28px);
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.05);
+    box-shadow: 0 0 0 4px var(--bg), 0 0 0 7px var(--accent);
+  }
+
+  .contact__title {
+    font-size: clamp(3rem, 9.4vw, 9.5rem);
+    letter-spacing: -0.055em;
+    line-height: 0.92;
+  }
+
+  .contact__invite {
+    max-width: 30ch;
+    margin-top: clamp(18px, 2.4vw, 32px);
+    text-wrap: balance;
+  }
+
+  .contact__button {
+    margin-top: clamp(22px, 2.6vw, 36px);
+    min-height: 56px;
+    padding-inline: 1.6em;
+  }
+
+  .contact__rows {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: clamp(72px, 9vw, 136px);
+    text-align: left;
+  }
+
+  .contact__rows li {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+    align-content: start;
+    padding: 4px clamp(14px, 2vw, 32px) 0;
+    box-shadow: inset 1px 0 0 color-mix(in srgb, var(--ink) 22%, transparent);
+    font-weight: 600;
+    line-height: 1.3;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__rows li:first-child {
+    padding-left: 0;
+    box-shadow: none;
+  }
+
+  @media (max-width: 900px) {
+    .contact__rows {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 28px;
+    }
+    .contact__rows li:nth-child(odd) {
+      padding-left: 0;
+      box-shadow: none;
+    }
+  }
+</style>

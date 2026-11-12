@@ -1,0 +1,140 @@
+---
+import { site, isTodo } from '../content/site';
+import T from './T.astro';
+import FlowField from './FlowField.astro';
+const { name, links, legal, hero } = site;
+const year = new Date().getFullYear();
+---
+<footer class="footer" data-flow-root>
+  <FlowField tone="field" strength={0.32} density={0.85} alpha={0.5} />
+
+  <div class="footer__cols" data-flow-block="18">
+    <div>
+      <h2 class="label muted">Kontakt</h2>
+      <ul>
+        <li><a class="link" href={links.linkedin} rel="noopener me">LinkedIn</a></li>
+        {!isTodo(links.github) && <li><a class="link" href={links.github} rel="noopener me">GitHub</a></li>}
+        <li>{isTodo(links.email) ? <T value={links.email} /> : <a class="link" href={`mailto:${links.email}`}>{links.email}</a>}</li>
+        <li>{site.location}</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="label muted">Seite</h2>
+      <ul>
+        {site.nav.map((item) => <li><a class="link" href={`/${item.href}`}>{item.label}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2 class="label muted">Darstellung</h2>
+      <ul>
+        <li>
+          <button class="footer__switch link" type="button" data-motion-toggle aria-pressed="false">
+            <span data-motion-label>Bewegung reduzieren</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="label muted">Rechtliches</h2>
+      <ul>
+        <li><a class="link" href={legal.imprint}>Impressum</a></li>
+        <li><a class="link" href={legal.privacy}>Datenschutz</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <p class="footer__note lead" data-flow-block="16">{hero.note}</p>
+    <p class="footer__name display" aria-hidden="true">
+      <span data-flow-glyphs>{name.first}</span>{' '}<span data-flow-glyphs>{name.last}</span><span class="dot" data-flow-glyphs>.</span>
+    </p>
+    <p class="footer__legal label muted" data-flow-block="10">© {year} {name.full}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    isolation: isolate;
+    min-height: 92svh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    padding: var(--section) calc(var(--inset) + var(--pad)) calc(var(--inset) + var(--pad));
+    overflow: clip;
+  }
+
+  .footer :global(.flow) {
+    z-index: -1;
+  }
+
+  .footer__cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px var(--gutter);
+    font-size: 16px;
+  }
+
+  .footer__cols h2 {
+    margin: 0 0 12px;
+  }
+
+  .footer__cols ul {
+    display: grid;
+    gap: 6px;
+    justify-items: start;
+  }
+
+  .footer__switch {
+    background: none;
+    border: 0;
+    padding: 0 0 0.14em;
+    cursor: pointer;
+    min-height: 28px;
+  }
+
+  .footer__bottom {
+    align-self: end;
+    container-type: inline-size;
+  }
+
+  .footer__note {
+    display: inline-block;
+    max-width: 24ch;
+    margin-bottom: clamp(20px, 3vw, 40px);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  .footer__name {
+    /* Width of the whole name in em at this cut. */
+    --fit: 7.44;
+    font-size: calc(100cqw / var(--fit));
+    letter-spacing: -0.055em;
+    line-height: 0.9;
+    white-space: nowrap;
+  }
+
+  .footer__name span {
+    display: inline-block;
+  }
+
+  .footer__legal {
+    display: inline-block;
+    margin-top: 18px;
+  }
+
+  @media (max-width: 720px) {
+    .footer__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      font-size: 15px;
+    }
+    .footer__name {
+      --fit: 4.82;
+      white-space: normal;
+    }
+    .footer__name span:first-child {
+      display: block;
+    }
+  }
+</style>

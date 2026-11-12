@@ -1,0 +1,44 @@
+---
+import Legal from '../layouts/Legal.astro';
+import T from '../components/T.astro';
+import { site, plain, isTodo } from '../content/site';
+const { legal, links, name } = site;
+---
+<Legal title="Impressum">
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <address>
+    <p>
+      {name.full}<br />
+      <T value={legal.street} /><br />
+      <T value={legal.city} /> Schwerte<br />
+      Deutschland
+    </p>
+  </address>
+
+  <h2>Kontakt</h2>
+  <p>E-Mail: <a href={`mailto:${plain(links.email)}`}>{plain(links.email)}</a></p>
+
+  <h2>Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV</h2>
+  <p>{name.full}, Anschrift wie oben.</p>
+
+  <h2>Haftung für Inhalte</h2>
+  <p>
+    Die Inhalte dieser Website habe ich mit Sorgfalt erstellt. Für ihre Richtigkeit, Vollständigkeit und Aktualität
+    übernehme ich keine Gewähr. Als Diensteanbieter bin ich für eigene Inhalte nach den allgemeinen Gesetzen
+    verantwortlich. Eine Pflicht, übermittelte oder gespeicherte fremde Informationen zu überwachen, besteht nicht.
+  </p>
+
+  <h2>Haftung für Links</h2>
+  <p>
+    Diese Website verweist auf externe Seiten, etwa auf LinkedIn, GitHub und die gezeigten Projekte. Auf deren Inhalte
+    habe ich keinen Einfluss; verantwortlich ist der jeweilige Anbieter. Zum Zeitpunkt der Verlinkung waren keine
+    Rechtsverstöße erkennbar. Werden mir solche bekannt, entferne ich den Link.
+  </p>
+
+  <h2>Urheberrecht</h2>
+  <p>
+    Texte, Gestaltung und Code dieser Website stammen von mir und unterliegen dem deutschen Urheberrecht. Die gezeigten
+    Projekte, ihre Namen und Marken gehören den jeweiligen Rechteinhabern.
+  </p>
+  {!isTodo(legal.photographer) && <p>Porträtfoto: <T value={legal.photographer} /></p>}
+</Legal>

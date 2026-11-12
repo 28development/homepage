@@ -1,0 +1,9 @@
+---
+/** Renders a piece of content, or a highlighted placeholder if it is still a todo. */
+import { isTodo, type Text } from '../content/site';
+interface Props {
+  value: Text;
+}
+const { value } = Astro.props;
+---
+{isTodo(value) ? <mark class="todo">{value.todo}</mark> : value}

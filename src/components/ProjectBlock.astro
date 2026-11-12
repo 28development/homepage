@@ -1,0 +1,146 @@
+---
+import { isTodo, plain, type Project } from '../content/site';
+import T from './T.astro';
+import FlowField from './FlowField.astro';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  project: Project;
+  /** Mirror the block: picture right, text left. */
+  flip?: boolean;
+}
+const { project, flip = false } = Astro.props;
+const letters = project.monogram.length;
+---
+<article class:list={['project', 'grid', { 'project--flip': flip }]} id={project.id} aria-labelledby={`${project.id}-title`}>
+  <div class="project__visual" style={`--n:${letters}`} data-reveal>
+    <div class="project__study" data-flow-root>
+      <span class="ticks" aria-hidden="true"></span>
+      <FlowField tone="ink" strength={0.3} density={0.9} alpha={0.55} hover />
+      <p class="project__monogram display" aria-hidden="true"><span data-flow-glyphs>{project.monogram}</span><span class="dot">.</span></p>
+    </div>
+  </div>
+
+  <div class="project__cluster">
+    <h3 class="project__title display" id={`${project.id}-title`} data-reveal style="--i:1"><T value={project.title} /><span class="dot">.</span></h3>
+    <p class="project__summary" data-reveal style="--i:2"><T value={project.summary} /></p>
+    <dl class="project__facts" data-reveal style="--i:3">
+      <div><dt class="label muted">Jahr</dt><dd><T value={project.year} /></dd></div>
+      <div><dt class="label muted">Mein Beitrag</dt><dd><T value={project.contribution} /></dd></div>
+      <div>
+        <dt class="label muted">Technologien</dt>
+        <dd><ul class="project__stack">{project.stack.map((item) => <li><T value={item} /></li>)}</ul></dd>
+      </div>
+      <div><dt class="label muted">Ergebnis</dt><dd><T value={project.result} /></dd></div>
+    </dl>
+    <p data-reveal style="--i:4">
+      {!project.href ? null : isTodo(project.href) ? (
+        <T value={project.href} />
+      ) : (
+        <a class="button" href={project.href} rel="noopener">Projekt ansehen<span class="visually-hidden">: {plain(project.title)}</span><Arrow direction="up-right" /></a>
+      )}
+    </p>
+  </div>
+</article>
+
+<style>
+  .project {
+    align-items: center;
+    row-gap: 28px;
+  }
+
+  .project__visual {
+    grid-column: 1 / span 7;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    overflow: clip;
+    transition: scale 600ms var(--ease-out);
+  }
+
+  .project__visual:hover {
+    scale: 1.012;
+  }
+
+  .project--flip .project__visual {
+    grid-column: 6 / -1;
+    order: 2;
+  }
+
+  .project__study {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    height: 100%;
+    container-type: inline-size;
+  }
+
+  .project__study :global(.flow) {
+    z-index: -1;
+  }
+
+  .project__monogram {
+    position: absolute;
+    left: var(--pad);
+    bottom: 10%;
+    font-size: calc(84cqw / (var(--n) * 0.62 + 0.3));
+    letter-spacing: -0.055em;
+    line-height: 0.9;
+    white-space: nowrap;
+  }
+
+  .project__cluster {
+    grid-column: 9 / -1;
+    display: grid;
+    gap: 22px;
+    justify-items: start;
+  }
+
+  .project--flip .project__cluster {
+    grid-column: 1 / span 4;
+    order: 1;
+  }
+
+  .project__title {
+    font-size: clamp(2rem, 1.3rem + 2.6vw, 3.75rem);
+  }
+
+  .project__summary {
+    max-width: 44ch;
+  }
+
+  .project__facts {
+    display: grid;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .project__facts > div {
+    display: grid;
+    grid-template-columns: 9.5em minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    padding-top: 14px;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--field-ink) 20%, transparent);
+  }
+
+  .project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  @media (max-width: 900px) {
+    .project__visual,
+    .project--flip .project__visual,
+    .project__cluster,
+    .project--flip .project__cluster {
+      grid-column: 1 / -1;
+      order: 0;
+    }
+    .project__facts > div {
+      grid-template-columns: 8em minmax(0, 1fr);
+    }
+  }
+</style>

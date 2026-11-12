@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import fontUrl from '@fontsource-variable/tiktok-sans/files/tiktok-sans-latin-wdth-normal.woff2?url';
+import { site } from '../content/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Keep the page out of search results (legal pages). */
+  noindex?: boolean;
+}
+const { title = site.seo.title, description = site.seo.description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name.full,
+  jobTitle: site.role,
+  url: site.url,
+  worksFor: { '@type': 'Organization', name: site.employer.name },
+  address: { '@type': 'PostalAddress', addressLocality: 'Schwerte', addressRegion: 'Nordrhein-Westfalen', addressCountry: 'DE' },
+  sameAs: [site.links.linkedin, 'https://github.com/28development'],
+};
+---
+<!doctype html>
+<html lang={site.lang} data-motion="full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="author" content={site.name.full} />
+    <meta name="theme-color" content="#17171b" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:site_name" content={site.name.full} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" as="font" type="font/woff2" href={fontUrl} crossorigin />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        var stored = null;
+        try { stored = localStorage.getItem('motion'); } catch (e) {}
+        var query = window.matchMedia('(prefers-reduced-motion: reduce)');
+        root.dataset.motion = stored || (query.matches ? 'reduced' : 'full');
+        // If the page script never arrives, nothing may stay hidden.
+        setTimeout(function () {
+          if (!window.__revealReady) root.classList.remove('js');
+        }, 4000);
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+    <slot />
+    <script>
+      import '../scripts/motion.ts';
+      import '../scripts/flow/boot.ts';
+    </script>
+  </body>
+</html>

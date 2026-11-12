@@ -1,0 +1,165 @@
+---
+import { site } from '../content/site';
+import T from './T.astro';
+import { portrait } from '../content/portrait';
+const { about } = site;
+---
+<section class="about card" id="ueber-mich" aria-labelledby="about-title">
+  <span class="ticks" aria-hidden="true"></span>
+  <div class="about__row grid">
+    <h2 class="head about__title" id="about-title" data-reveal="mask"><span>{about.heading}<span class="dot">.</span></span></h2>
+    <div class:list={['about__text', 'lead', { 'about__text--narrow': portrait }]}>
+      {about.paragraphs.map((paragraph, index) => <p data-reveal style={`--i:${index + 1}`}>{paragraph}</p>)}
+    </div>
+    {portrait && (
+      <figure class="about__portrait" data-reveal style="--i:2">
+        <img src={portrait.src} alt={portrait.alt} width={portrait.width} height={portrait.height} loading="lazy" decoding="async" />
+        <span class="pill about__portrait-tag">{site.name.first}</span>
+      </figure>
+    )}
+  </div>
+
+  <dl class="about__facts">
+    {about.facts.map((fact, index) => (
+      <div data-reveal style={`--i:${index}`}><dt class="label muted">{fact.label}</dt><dd>{fact.value}</dd></div>
+    ))}
+  </dl>
+
+  <div class="about__lists grid">
+    {about.lists.map((list, index) => (
+      <div class={`about__list about__list--${index}`} data-reveal style={`--i:${index}`}>
+        <h3 class="label muted">{list.label}</h3>
+        <ul>{list.items.map((item) => <li><T value={item} /></li>)}</ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: clamp(64px, 8vw, 128px);
+  }
+
+  .about__row {
+    row-gap: 32px;
+    align-items: start;
+  }
+
+  .about__title {
+    grid-column: 1 / span 5;
+  }
+
+  .about__text {
+    grid-column: 7 / -1;
+    display: grid;
+    gap: 1em;
+  }
+
+  .about__text--narrow {
+    grid-column: 5 / span 4;
+    font-size: var(--step-body);
+    line-height: 1.5;
+  }
+
+  .about__title:has(~ .about__portrait) {
+    grid-column: 1 / span 4;
+  }
+
+  /* The photograph is printed onto the butter: its greys take the ground's colour. */
+  .about__portrait {
+    position: relative;
+    grid-column: 9 / -1;
+    grid-row: 1;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .about__portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    filter: grayscale(1) contrast(1.08);
+    mix-blend-mode: multiply;
+  }
+
+  .about__portrait-tag {
+    position: absolute;
+    left: -14px;
+    bottom: 12%;
+    rotate: -6deg;
+  }
+
+  .about__facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: clamp(56px, 7vw, 104px);
+  }
+
+  .about__facts > div {
+    padding: 4px clamp(14px, 2vw, 32px) 0;
+    box-shadow: inset 1px 0 0 color-mix(in srgb, var(--ink) 22%, transparent);
+  }
+
+  .about__facts > div:first-child {
+    padding-left: 0;
+    box-shadow: none;
+  }
+
+  .about__facts dd {
+    margin-top: 10px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .about__lists {
+    margin-top: clamp(56px, 7vw, 104px);
+    row-gap: 40px;
+  }
+
+  .about__list--0 {
+    grid-column: 1 / span 6;
+  }
+
+  .about__list--1 {
+    grid-column: 7 / -1;
+  }
+
+  .about__list h3 {
+    margin-bottom: 16px;
+  }
+
+  .about__list ul {
+    display: grid;
+    gap: 8px;
+    font-size: var(--step-lead);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 900px) {
+    .about__title,
+    .about__title:has(~ .about__portrait),
+    .about__text,
+    .about__text--narrow,
+    .about__list--0,
+    .about__list--1 {
+      grid-column: 1 / -1;
+    }
+    .about__portrait {
+      grid-column: 1 / span 8;
+      grid-row: auto;
+    }
+    .about__facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 28px;
+    }
+    .about__facts > div:nth-child(odd) {
+      padding-left: 0;
+      box-shadow: none;
+    }
+  }
+</style>

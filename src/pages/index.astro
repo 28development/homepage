@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import Ticker from '../components/Ticker.astro';
+import Projects from '../components/Projects.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Contact from '../components/Contact.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<Base>
+  <SiteHeader />
+  <main id="inhalt">
+    <div class="intro"><Hero /></div>
+    <div class="rest">
+      <Ticker />
+      <Projects />
+      <About />
+      <Experience />
+      <Contact />
+    </div>
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .rest {
+    position: relative;
+    z-index: 1;
+    background: var(--field);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  /* On screens tall and wide enough for the whole poster, it holds its place
+     for one screen while the next section slides over it. */
+  @media (min-width: 721px) and (min-height: 680px) {
+    :global(html[data-motion='full']) .intro {
+      height: 200svh;
+    }
+    :global(html[data-motion='full']) .intro > :global(*) {
+      position: sticky;
+      top: var(--inset);
+    }
+    :global(html[data-motion='full']) .rest {
+      margin-top: -100svh;
+    }
+
+    /* While it is covered, the poster steps back. */
+    @supports (animation-timeline: scroll()) {
+      :global(html[data-motion='full']) .intro > :global(*) {
+        animation: poster-recede linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 100svh;
+      }
+    }
+  }
+
+  @keyframes poster-recede {
+    to {
+      scale: 0.93;
+      filter: brightness(0.55);
+    }
+  }
+</style>
